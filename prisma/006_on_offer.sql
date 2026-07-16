@@ -1,0 +1,3 @@
+-- AddColumn
+ALTER TABLE "Product" ADD COLUMN "onOffer" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "Product" ADD COLUMN "offerEndsAt" DATETIME;

@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000/api/auth/providers)",
+      "Bash(curl -s http://localhost:3000/api/auth/csrf)",
+      "Bash(node -e ' *)",
+      "Bash(xargs grep -l \"interface JWT\")",
+      "Bash(xargs grep -ln \"interface JWT\")",
+      "Bash(npx eslint *)",
+      "Bash(curl -s http://localhost:3000/admin/admins -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(node -pe \"require\\('fs'\\).readFileSync\\('.env','utf8'\\).match\\(/TURSO_DATABASE_URL=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)[1]\")",
+      "Bash(node -pe \"require\\('fs'\\).readFileSync\\('.env','utf8'\\).match\\(/TURSO_AUTH_TOKEN=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)[1]\")",
+      "Bash(TURSO_DATABASE_URL=$\\(node -pe \"require\\('fs'\\).readFileSync\\('.env','utf8'\\).match\\(/TURSO_DATABASE_URL=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)[1]\"\\) TURSO_AUTH_TOKEN=$\\(node -pe \"require\\('fs'\\).readFileSync\\('.env','utf8'\\).match\\(/TURSO_AUTH_TOKEN=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)[1]\"\\) node scripts/_tmp_backfill.mjs)",
+      "Bash(curl -s http://localhost:3000/admin/products -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/admin/products -o /dev/null -w \"products: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/admin/orders -o /dev/null -w \"orders: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/ -o /dev/null -w \"home: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/cart -o /dev/null -w \"cart: %{http_code}\\\\n\")",
+      "Bash(node scripts/apply-sql.mjs prisma/005_original_price.sql)",
+      "Bash(curl -s \"http://localhost:3000/?q=eldoret\")",
+      "Bash(curl -s \"http://localhost:3000/?q=camera\")",
+      "Bash(TURSO_DATABASE_URL=$\\(node -pe \"require\\('fs'\\).readFileSync\\('.env','utf8'\\).match\\(/TURSO_DATABASE_URL=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)[1]\"\\) TURSO_AUTH_TOKEN=$\\(node -pe \"require\\('fs'\\).readFileSync\\('.env','utf8'\\).match\\(/TURSO_AUTH_TOKEN=\\\\\"\\([^\\\\\"]+\\)\\\\\"/\\)[1]\"\\) node scripts/_tmp_test_search.mjs)",
+      "Bash(curl -s \"http://localhost:3000/?q=black\")",
+      "Bash(curl -s \"http://localhost:3000/?q=spark\")",
+      "Bash(curl -s \"http://localhost:3000/?q=zzz_no_match\")",
+      "Bash(curl -s \"http://localhost:3000/?q=wooooooo\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/ --max-time 3)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/ --max-time 5)"
+    ]
+  }
+}
