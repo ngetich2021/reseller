@@ -215,6 +215,13 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   quantity: 'quantity'
 };
 
+exports.Prisma.PageViewScalarFieldEnum = {
+  id: 'id',
+  path: 'path',
+  visitorId: 'visitorId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -251,7 +258,8 @@ exports.Prisma.ModelName = {
   SubCategory: 'SubCategory',
   Product: 'Product',
   Order: 'Order',
-  OrderItem: 'OrderItem'
+  OrderItem: 'OrderItem',
+  PageView: 'PageView'
 };
 
 /**

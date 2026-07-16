@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/admin/orders", label: "Orders", permission: "ORDERS" },
   { href: "/admin/categories", label: "Categories", permission: "CATEGORIES" },
   { href: "/admin/admins", label: "Admins", permission: "ADMINS" },
+  { href: "/admin/analytics", label: "Analytics", permission: null },
 ] as const;
 
 function HamburgerIcon() {
@@ -41,7 +42,9 @@ export function AdminNav({ permissions }: { permissions: Permission[] }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const links = LINKS.filter((link) => permissions.includes(link.permission));
+  const links = LINKS.filter((link) =>
+    link.permission === null ? true : permissions.includes(link.permission)
+  );
 
   function updatePosition() {
     const rect = triggerRef.current?.getBoundingClientRect();
