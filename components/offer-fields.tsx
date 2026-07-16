@@ -14,6 +14,11 @@ export function OfferFields({
   inputClass: string;
 }) {
   const [onOffer, setOnOffer] = useState(defaultChecked);
+  const [minEndsAt] = useState(() => {
+    const now = new Date();
+    const offsetMs = now.getTimezoneOffset() * 60_000;
+    return new Date(now.getTime() - offsetMs).toISOString().slice(0, 16);
+  });
 
   return (
     <>
@@ -62,6 +67,7 @@ export function OfferFields({
               type="datetime-local"
               name="offerEndsAt"
               defaultValue={defaultOfferEndsAt}
+              min={minEndsAt}
               required
               className={inputClass}
             />

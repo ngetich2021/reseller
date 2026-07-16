@@ -54,6 +54,8 @@ const productSchema = z
     offerPrice: data.onOffer ? data.offerPrice! : null,
   }));
 
+export type ProductFormState = { error?: string };
+
 function parseProduct(formData: FormData) {
   return productSchema.parse({
     name: formData.get("name"),
@@ -69,52 +71,75 @@ function parseProduct(formData: FormData) {
   });
 }
 
-export async function createProduct(formData: FormData) {
+export async function createProduct(
+  _prevState: ProductFormState,
+  formData: FormData
+): Promise<ProductFormState> {
   await assertPermission("PRODUCTS");
-  const data = parseProduct(formData);
 
-  const image = formData.get("image");
-  if (!(image instanceof File) || image.size === 0) {
-    throw new Error("Image is required");
+  try {
+    const data = parseProduct(formData);
+
+    const image = formData.get("image");
+    if (!(image instanceof File) || image.size === 0) {
+      return { error: "Image is required" };
+    }
+    const uploaded = await uploadImage(image);
+
+    await prisma.product.create({
+      data: {
+        ...data,
+        imageUrl: uploaded.url,
+        imagePublicId: uploaded.publicId,
+      },
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return { error: err.issues[0]?.message ?? "Invalid input" };
+    }
+    throw err;
   }
-  const uploaded = await uploadImage(image);
-
-  await prisma.product.create({
-    data: {
-      ...data,
-      imageUrl: uploaded.url,
-      imagePublicId: uploaded.publicId,
-    },
-  });
 
   revalidatePath("/admin/products");
   revalidatePath("/");
   redirect("/admin/products");
 }
 
-export async function updateProduct(id: string, formData: FormData) {
+export async function updateProduct(
+  id: string,
+  _prevState: ProductFormState,
+  formData: FormData
+): Promise<ProductFormState> {
   await assertPermission("PRODUCTS");
-  const data = parseProduct(formData);
 
-  const image = formData.get("image");
-  let imageFields: { imageUrl: string; imagePublicId: string } | undefined;
+  try {
+    const data = parseProduct(formData);
 
-  if (image instanceof File && image.size > 0) {
-    const existing = await prisma.product.findUnique({
-      where: { id },
-      select: { imagePublicId: true },
-    });
-    const uploaded = await uploadImage(image);
-    imageFields = { imageUrl: uploaded.url, imagePublicId: uploaded.publicId };
-    if (existing?.imagePublicId) {
-      await deleteImage(existing.imagePublicId).catch(() => {});
+    const image = formData.get("image");
+    let imageFields: { imageUrl: string; imagePublicId: string } | undefined;
+
+    if (image instanceof File && image.size > 0) {
+      const existing = await prisma.product.findUnique({
+        where: { id },
+        select: { imagePublicId: true },
+      });
+      const uploaded = await uploadImage(image);
+      imageFields = { imageUrl: uploaded.url, imagePublicId: uploaded.publicId };
+      if (existing?.imagePublicId) {
+        await deleteImage(existing.imagePublicId).catch(() => {});
+      }
     }
-  }
 
-  await prisma.product.update({
-    where: { id },
-    data: { ...data, ...imageFields },
-  });
+    await prisma.product.update({
+      where: { id },
+      data: { ...data, ...imageFields },
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return { error: err.issues[0]?.message ?? "Invalid input" };
+    }
+    throw err;
+  }
 
   revalidatePath("/admin/products");
   revalidatePath("/");
